@@ -3,171 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrixReventeAI - Estimez le prix optimal de revente</title>
+    <title>PrixReventeAI - Estimez le prix optimal de revente seconde main</title>
+    <meta name="description" content="Estimez le prix optimal de revente de vos articles sur Vinted et Leboncoin avec l'IA en 30 secondes">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @keyframes confetti {from{transform:translateY(-100vh) rotate(0deg)}to{transform:translateY(100vh) rotate(720deg)}}
-        .confetti{position:fixed;width:10px;height:10px;animation:confetti 3s ease-in-out}
+        .confetti{position:fixed;width:10px;height:10px;animation:confetti 3s ease-in-out;z-index:9999}
+        @keyframes fadeIn {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fadeIn 0.5s ease-out}
+        .stat-card{transition:all 0.3s ease}
+        .stat-card:hover{transform:translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,0.1)}
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-orange-50 min-h-screen">
-    <nav class="bg-gradient-to-r from-blue-600 to-orange-500 text-white p-4 shadow-lg">
+    <!-- Navigation -->
+    <nav class="bg-gradient-to-r from-blue-600 to-orange-500 text-white p-4 shadow-lg sticky top-0 z-50">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold">🎯 PrixReventeAI</h1>
+            <a href="#" onclick="showLanding()" class="text-2xl font-bold cursor-pointer hover:scale-105 transition">🎯 PrixReventeAI</a>
             <div class="flex gap-4">
-                <a href="#" onclick="showDashboard()" class="hover:underline">Dashboard</a>
+                <a href="#" onclick="showDashboard()" class="hover:underline hidden md:block">Dashboard</a>
                 <a href="#" onclick="showEstimate()" class="hover:underline">Nouvelle Estimation</a>
+                <a href="#" onclick="showHistory()" class="hover:underline hidden md:block">Historique</a>
                 <a href="#" onclick="showPricing()" class="hover:underline">Abonnement</a>
             </div>
         </div>
     </nav>
 
     <main class="max-w-6xl mx-auto p-6" id="app">
-        <div id="landing" class="text-center py-20">
+        <!-- Landing Page -->
+        <div id="landing" class="text-center py-20 fade-in">
             <h2 class="text-5xl font-bold text-gray-800 mb-6">Prix optimal de revente en 30 secondes</h2>
-            <p class="text-xl text-gray-600 mb-8">IA + Scraping temps réel Vinted & Leboncoin</p>
-            <button onclick="showEstimate()" class="bg-gradient-to-r from-blue-600 to-orange-500 text-white px-8 py-4 rounded-lg text-xl font-bold hover:shadow-xl transition">Commencer gratuitement</button>
+            <p class="text-xl text-gray-600 mb-8">IA Perplexity + Scraping temps réel Vinted & Leboncoin</p>
+            <button onclick="showEstimate()" class="bg-gradient-to-r from-blue-600 to-orange-500 text-white px-8 py-4 rounded-lg text-xl font-bold hover:shadow-xl transition transform hover:scale-105">✨ Commencer gratuitement</button>
+            
             <div class="grid md:grid-cols-3 gap-8 mt-16">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="bg-white p-6 rounded-lg shadow-lg stat-card">
                     <div class="text-4xl mb-4">📸</div>
                     <h3 class="text-xl font-bold mb-2">Upload Photo</h3>
-                    <p class="text-gray-600">IA analyse automatiquement marque, modèle et état</p>
+                    <p class="text-gray-600">IA Perplexity analyse automatiquement marque, modèle et état</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="bg-white p-6 rounded-lg shadow-lg stat-card">
                     <div class="text-4xl mb-4">🔍</div>
                     <h3 class="text-xl font-bold mb-2">Scraping Temps Réel</h3>
-                    <p class="text-gray-600">50+ listings Vinted & Leboncoin analysés</p>
+                    <p class="text-gray-600">50+ listings Vinted & Leboncoin analysés en direct</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="bg-white p-6 rounded-lg shadow-lg stat-card">
                     <div class="text-4xl mb-4">💰</div>
                     <h3 class="text-xl font-bold mb-2">Prix Optimal IA</h3>
-                    <p class="text-gray-600">Fourchette min-max + temps de vente estimé</p>
+                    <p class="text-gray-600">Fourchette min-max + temps de vente estimé + plateforme optimale</p>
+                </div>
+            </div>
+
+            <!-- Testimonials -->
+            <div class="mt-20">
+                <h3 class="text-3xl font-bold mb-8">Ils nous font confiance</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <p class="text-gray-600 mb-4">"J'ai vendu mes sneakers 30% plus cher grâce à PrixReventeAI !"</p>
+                        <p class="font-bold">- Marie, Lyon</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <p class="text-gray-600 mb-4">"Super outil pour mes ventes régulières sur Vinted. Gain de temps énorme."</p>
+                        <p class="font-bold">- Thomas, Paris</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <p class="text-gray-600 mb-4">"L'analyse IA est impressionnante. Prix toujours justes!"</p>
+                        <p class="font-bold">- Sarah, Marseille</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="estimate" class="hidden">
-            <h2 class="text-3xl font-bold mb-8">Nouvelle Estimation</h2>
+        <!-- Dashboard -->
+        <div id="dashboard" class="hidden fade-in">
+            <h2 class="text-3xl font-bold mb-8">📊 Mon Dashboard</h2>
+            
+            <!-- Stats Cards -->
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg stat-card">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-600">Estimations restantes</span>
+                        <span class="text-2xl">🎯</span>
+                    </div>
+                    <p class="text-3xl font-bold text-blue-600" id="estimationsLeft">5</p>
+                    <p class="text-sm text-gray-500">Plan FREE</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg stat-card">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-600">Total estimations</span>
+                        <span class="text-2xl">📈</span>
+                    </div>
+                    <p class="text-3xl font-bold text-green-600" id="totalEstimations">0</p>
+                    <p class="text-sm text-gray-500">Ce mois-ci</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg stat-card">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-600">Économies estimées</span>
+                        <span class="text-2xl">💰</span>
+                    </div>
+                    <p class="text-3xl font-bold text-orange-600">0€</p>
+                    <p class="text-sm text-gray-500">Gain potentiel</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg stat-card">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-600">Taux de succès</span>
+                        <span class="text-2xl">✅</span>
+                    </div>
+                    <p class="text-3xl font-bold text-purple-600">--</p>
+                    <p class="text-sm text-gray-500">Ventes réussies</p>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <button onclick="showEstimate()" class="bg-gradient-to-r from-blue-600 to-orange-500 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transition transform hover:scale-105">
+                    <div class="text-3xl mb-2">✨</div>
+                    <p class="font-bold">Nouvelle Estimation</p>
+                </button>
+                <button onclick="showHistory()" class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition transform hover:scale-105">
+                    <div class="text-3xl mb-2">📜</div>
+                    <p class="font-bold">Voir l'historique</p>
+                </button>
+                <button onclick="showPricing()" class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition transform hover:scale-105">
+                    <div class="text-3xl mb-2">🚀</div>
+                    <p class="font-bold">Passer PRO</p>
+                </button>
+            </div>
+
+            <!-- Graphique d'activité -->
+            <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+                <h3 class="text-xl font-bold mb-4">📊 Activité des 7 derniers jours</h3>
+                anvas id="activityChart" height="80"></canvas>
+            </div>
+
+            <!-- Historique récent -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold">📜 Dernières estimations</h3>
+                    <button onclick="showHistory()" class="text-blue-600 hover:underline">Voir tout →</button>
+                </div>
+                <div id="recentHistory" class="space-y-3">
+                    <p class="text-gray-500 text-center py-8">Aucune estimation pour le moment. Commencez maintenant!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estimate Form -->
+        <div id="estimate" class="hidden fade-in">
+            <button onclick="showDashboard()" class="text-blue-600 hover:underline mb-4">← Retour au dashboard</button>
+            <h2 class="text-3xl font-bold mb-8">✨ Nouvelle Estimation</h2>
             <div class="bg-white rounded-lg shadow-lg p-8">
                 <form onsubmit="calculatePrice(event)" class="space-y-6">
                     <div>
-                        <label class="block text-sm font-bold mb-2">Photo du produit</label>
-                        <input type="file" accept="image/*" class="w-full border-2 border-gray-300 rounded-lg p-2">
+                        <label class="block text-sm font-bold mb-2">📸 Photo du produit</label>
+                        <input type="file" accept="image/*" id="photoInput" class="w-full border-2 border-gray-300 rounded-lg p-2 hover:border-blue-500 transition">
+                        <p class="text-xs text-gray-500 mt-1">L'IA Perplexity analysera automatiquement votre photo</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold mb-2">Nom du produit</label>
-                        <input type="text" id="productName" required class="w-full border-2 border-gray-300 rounded-lg p-2" placeholder="Ex: Nike Air Max 90">
+                        <label class="block text-sm font-bold mb-2">🏷️ Nom du produit *</label>
+                        <input type="text" id="productName" required class="w-full border-2 border-gray-300 rounded-lg p-2 hover:border-blue-500 focus:border-blue-500 transition" placeholder="Ex: Nike Air Max 90 Blanc">
                     </div>
                     <div>
-                        <label class="block text-sm font-bold mb-2">État</label>
-                        <select id="condition" class="w-full border-2 border-gray-300 rounded-lg p-2">
-                            <option value="neuf">Neuf avec étiquette</option>
-                            <option value="excellent">Excellent état</option>
-                            <option value="bon" selected>Bon état</option>
-                            <option value="use">Usé</option>
+                        <label class="block text-sm font-bold mb-2">📦 État du produit *</label>
+                        <select id="condition" class="w-full border-2 border-gray-300 rounded-lg p-2 hover:border-blue-500 focus:border-blue-500 transition">
+                            <option value="neuf">✨ Neuf avec étiquette</option>
+                            <option value="excellent">⭐ Excellent état (comme neuf)</option>
+                            <option value="bon" selected>👍 Bon état (légères traces)</option>
+                            <option value="use">📉 Usé (défauts visibles)</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-sm font-bold mb-2">Localisation</label>
-                        <input type="text" value="Lyon, France" class="w-full border-2 border-gray-300 rounded-lg p-2">
-                    </div>
-                    <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:shadow-xl transition">✨ Estimer le prix (IA)</button>
-                </form>
-            </div>
-        </div>
-
-        <div id="result" class="hidden">
-            <div class="bg-white rounded-lg shadow-lg p-8">
-                <h2 class="text-3xl font-bold mb-4">Résultat de l'estimation</h2>
-                <div class="grid md:grid-cols-2 gap-6 mb-6">
-                    <div class="text-center p-6 bg-green-50 rounded-lg">
-                        <p class="text-gray-600 mb-2">Prix recommandé</p>
-                        <p class="text-5xl font-bold text-green-600" id="recPrice">45€</p>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="flex justify-between">
-                            <span>Fourchette:</span>
-                            <span class="font-bold" id="range">36€ - 54€</span>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold mb-2">📍 Localisation</label>
+                            <input type="text" id="location" value="Lyon, France" class="w-full border-2 border-gray-300 rounded-lg p-2 hover:border-blue-500 focus:border-blue-500 transition">
                         </div>
-                        <div class="flex justify-between">
-                            <span>Temps vente estimé:</span>
-                            <span class="font-bold">3-7 jours</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Plateforme recommandée:</span>
-                            <span class="font-bold">Vinted</span>
+                        <div>
+                            <label class="block text-sm font-bold mb-2">📅 Date d'achat (optionnel)</label>
+                            <input type="date" id="purchaseDate" class="w-full border-2 border-gray-300 rounded-lg p-2 hover:border-blue-500 focus:border-blue-500 transition">
                         </div>
                     </div>
-                </div>
-                <button onclick="showEstimate()" class="w-full bg-gray-200 px-6 py-3 rounded-lg font-bold">Nouvelle estimation</button>
-            </div>
-        </div>
-
-        <div id="pricing" class="hidden">
-            <h2 class="text-3xl font-bold mb-8 text-center">Plans & Tarifs</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white rounded-lg shadow-lg p-8">
-                    <h3 class="text-2xl font-bold mb-4">FREE</h3>
-                    <p class="text-4xl font-bold mb-4">0€<span class="text-sm">/mois</span></p>
-                    <ul class="space-y-2 mb-6">
-                        <li>✅ 5 estimations/mois</li>
-                        <li>✅ Scraping basique</li>
-                        <li>✅ Export PDF</li>
-                    </ul>
-                    <button class="w-full bg-gray-200 px-6 py-3 rounded-lg font-bold">Actuel</button>
-                </div>
-                <div class="bg-gradient-to-br from-blue-600 to-orange-500 text-white rounded-lg shadow-lg p-8 transform scale-105">
-                    <h3 class="text-2xl font-bold mb-4">PRO</h3>
-                    <p class="text-4xl font-bold mb-4">19€<span class="text-sm">/mois</span></p>
-                    <ul class="space-y-2 mb-6">
-                        <li>✅ 100 estimations/mois</li>
-                        <li>✅ Scraping avancé</li>
-                        <li>✅ Analyse IA photos</li>
-                        <li>✅ Historique complet</li>
-                    </ul>
-                    <button class="w-full bg-white text-blue-600 px-6 py-3 rounded-lg font-bold">Passer PRO</button>
-                </div>
-                <div class="bg-white rounded-lg shadow-lg p-8">
-                    <h3 class="text-2xl font-bold mb-4">MAX</h3>
-                    <p class="text-4xl font-bold mb-4">49€<span class="text-sm">/mois</span></p>
-                    <ul class="space-y-2 mb-6">
-                        <li>✅ Illimité</li>
-                        <li>✅ API access</li>
-                        <li>✅ Support prioritaire</li>
-                        <li>✅ Tendances marché</li>
-                    </ul>
-                    <button class="w-full bg-gray-200 px-6 py-3 rounded-lg font-bold">Passer MAX</button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        function showLanding(){document.getElementById('landing').classList.remove('hidden');document.getElementById('estimate').classList.add('hidden');document.getElementById('result').classList.add('hidden');document.getElementById('pricing').classList.add('hidden');}
-        function showEstimate(){document.getElementById('landing').classList.add('hidden');document.getElementById('estimate').classList.remove('hidden');document.getElementById('result').classList.add('hidden');document.getElementById('pricing').classList.add('hidden');}
-        function showDashboard(){alert('Dashboard - En construction');}
-        function showPricing(){document.getElementById('landing').classList.add('hidden');document.getElementById('estimate').classList.add('hidden');document.getElementById('result').classList.add('hidden');document.getElementById('pricing').classList.remove('hidden');}
-        
-        function calculatePrice(e){
-            e.preventDefault();
-            const productName=document.getElementById('productName').value;
-            const condition=document.getElementById('condition').value;
-            let basePrice=45;
-            if(condition==='neuf')basePrice=Math.round(basePrice*1.15);
-            if(condition==='use')basePrice=Math.round(basePrice*0.75);
-            document.getElementById('recPrice').textContent=basePrice+'€';
-            document.getElementById('range').textContent=Math.round(basePrice*0.8)+'€ - '+Math.round(basePrice*1.2)+'€';
-            document.getElementById('estimate').classList.add('hidden');
-            document.getElementById('result').classList.remove('hidden');
-            for(let i=0;i<50;i++){
-                let conf=document.createElement('div');
-                conf.className='confetti';
-                conf.style.left=Math.random()*100+'vw';
-                conf.style.backgroundColor=['#3B82F6','#F97316','#10B981'][Math.floor(Math.random()*3)];
-                document.body.appendChild(conf);
-                setTimeout(()=>conf.remove(),3000);
-            }
-        }
-    </script>
-</body>
-</html>
+                    <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-orange-500 text-white px-6 py-4 rounded-lg font-bold hover:shadow-xl transition transform hover:scale-105">
+                        🤖 Estimer le prix avec l'IA
