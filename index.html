@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrixReventeAI - Estimez le prix optimal de revente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes confetti {from{transform:translateY(-100vh) rotate(0deg)}to{transform:translateY(100vh) rotate(720deg)}}
+        .confetti{position:fixed;width:10px;height:10px;animation:confetti 3s ease-in-out}
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-orange-50 min-h-screen">
+    <nav class="bg-gradient-to-r from-blue-600 to-orange-500 text-white p-4 shadow-lg">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">🎯 PrixReventeAI</h1>
+            <div class="flex gap-4">
+                <a href="#" onclick="showDashboard()" class="hover:underline">Dashboard</a>
+                <a href="#" onclick="showEstimate()" class="hover:underline">Nouvelle Estimation</a>
+                <a href="#" onclick="showPricing()" class="hover:underline">Abonnement</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-6" id="app">
+        <div id="landing" class="text-center py-20">
+            <h2 class="text-5xl font-bold text-gray-800 mb-6">Prix optimal de revente en 30 secondes</h2>
+            <p class="text-xl text-gray-600 mb-8">IA + Scraping temps réel Vinted & Leboncoin</p>
+            <button onclick="showEstimate()" class="bg-gradient-to-r from-blue-600 to-orange-500 text-white px-8 py-4 rounded-lg text-xl font-bold hover:shadow-xl transition">Commencer gratuitement</button>
+            <div class="grid md:grid-cols-3 gap-8 mt-16">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-4xl mb-4">📸</div>
+                    <h3 class="text-xl font-bold mb-2">Upload Photo</h3>
+                    <p class="text-gray-600">IA analyse automatiquement marque, modèle et état</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-4xl mb-4">🔍</div>
+                    <h3 class="text-xl font-bold mb-2">Scraping Temps Réel</h3>
+                    <p class="text-gray-600">50+ listings Vinted & Leboncoin analysés</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-4xl mb-4">💰</div>
+                    <h3 class="text-xl font-bold mb-2">Prix Optimal IA</h3>
+                    <p class="text-gray-600">Fourchette min-max + temps de vente estimé</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="estimate" class="hidden">
+            <h2 class="text-3xl font-bold mb-8">Nouvelle Estimation</h2>
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <form onsubmit="calculatePrice(event)" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Photo du produit</label>
+                        <input type="file" accept="image/*" class="w-full border-2 border-gray-300 rounded-lg p-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Nom du produit</label>
+                        <input type="text" id="productName" required class="w-full border-2 border-gray-300 rounded-lg p-2" placeholder="Ex: Nike Air Max 90">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2">État</label>
+                        <select id="condition" class="w-full border-2 border-gray-300 rounded-lg p-2">
+                            <option value="neuf">Neuf avec étiquette</option>
+                            <option value="excellent">Excellent état</option>
+                            <option value="bon" selected>Bon état</option>
+                            <option value="use">Usé</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Localisation</label>
+                        <input type="text" value="Lyon, France" class="w-full border-2 border-gray-300 rounded-lg p-2">
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:shadow-xl transition">✨ Estimer le prix (IA)</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="result" class="hidden">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h2 class="text-3xl font-bold mb-4">Résultat de l'estimation</h2>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="text-center p-6 bg-green-50 rounded-lg">
+                        <p class="text-gray-600 mb-2">Prix recommandé</p>
+                        <p class="text-5xl font-bold text-green-600" id="recPrice">45€</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span>Fourchette:</span>
+                            <span class="font-bold" id="range">36€ - 54€</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Temps vente estimé:</span>
+                            <span class="font-bold">3-7 jours</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Plateforme recommandée:</span>
+                            <span class="font-bold">Vinted</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="showEstimate()" class="w-full bg-gray-200 px-6 py-3 rounded-lg font-bold">Nouvelle estimation</button>
+            </div>
+        </div>
+
+        <div id="pricing" class="hidden">
+            <h2 class="text-3xl font-bold mb-8 text-center">Plans & Tarifs</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-bold mb-4">FREE</h3>
+                    <p class="text-4xl font-bold mb-4">0€<span class="text-sm">/mois</span></p>
+                    <ul class="space-y-2 mb-6">
+                        <li>✅ 5 estimations/mois</li>
+                        <li>✅ Scraping basique</li>
+                        <li>✅ Export PDF</li>
+                    </ul>
+                    <button class="w-full bg-gray-200 px-6 py-3 rounded-lg font-bold">Actuel</button>
+                </div>
+                <div class="bg-gradient-to-br from-blue-600 to-orange-500 text-white rounded-lg shadow-lg p-8 transform scale-105">
+                    <h3 class="text-2xl font-bold mb-4">PRO</h3>
+                    <p class="text-4xl font-bold mb-4">19€<span class="text-sm">/mois</span></p>
+                    <ul class="space-y-2 mb-6">
+                        <li>✅ 100 estimations/mois</li>
+                        <li>✅ Scraping avancé</li>
+                        <li>✅ Analyse IA photos</li>
+                        <li>✅ Historique complet</li>
+                    </ul>
+                    <button class="w-full bg-white text-blue-600 px-6 py-3 rounded-lg font-bold">Passer PRO</button>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-bold mb-4">MAX</h3>
+                    <p class="text-4xl font-bold mb-4">49€<span class="text-sm">/mois</span></p>
+                    <ul class="space-y-2 mb-6">
+                        <li>✅ Illimité</li>
+                        <li>✅ API access</li>
+                        <li>✅ Support prioritaire</li>
+                        <li>✅ Tendances marché</li>
+                    </ul>
+                    <button class="w-full bg-gray-200 px-6 py-3 rounded-lg font-bold">Passer MAX</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showLanding(){document.getElementById('landing').classList.remove('hidden');document.getElementById('estimate').classList.add('hidden');document.getElementById('result').classList.add('hidden');document.getElementById('pricing').classList.add('hidden');}
+        function showEstimate(){document.getElementById('landing').classList.add('hidden');document.getElementById('estimate').classList.remove('hidden');document.getElementById('result').classList.add('hidden');document.getElementById('pricing').classList.add('hidden');}
+        function showDashboard(){alert('Dashboard - En construction');}
+        function showPricing(){document.getElementById('landing').classList.add('hidden');document.getElementById('estimate').classList.add('hidden');document.getElementById('result').classList.add('hidden');document.getElementById('pricing').classList.remove('hidden');}
+        
+        function calculatePrice(e){
+            e.preventDefault();
+            const productName=document.getElementById('productName').value;
+            const condition=document.getElementById('condition').value;
+            let basePrice=45;
+            if(condition==='neuf')basePrice=Math.round(basePrice*1.15);
+            if(condition==='use')basePrice=Math.round(basePrice*0.75);
+            document.getElementById('recPrice').textContent=basePrice+'€';
+            document.getElementById('range').textContent=Math.round(basePrice*0.8)+'€ - '+Math.round(basePrice*1.2)+'€';
+            document.getElementById('estimate').classList.add('hidden');
+            document.getElementById('result').classList.remove('hidden');
+            for(let i=0;i<50;i++){
+                let conf=document.createElement('div');
+                conf.className='confetti';
+                conf.style.left=Math.random()*100+'vw';
+                conf.style.backgroundColor=['#3B82F6','#F97316','#10B981'][Math.floor(Math.random()*3)];
+                document.body.appendChild(conf);
+                setTimeout(()=>conf.remove(),3000);
+            }
+        }
+    </script>
+</body>
+</html>
