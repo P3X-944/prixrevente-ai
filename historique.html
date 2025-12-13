@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique - PrixReventeAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fadeIn 0.5s ease-out}
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-orange-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-gradient-to-r from-blue-600 to-orange-500 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <a href="index.html" class="text-2xl font-bold cursor-pointer hover:scale-105 transition">🎯 PrixReventeAI</a>
+            <div class="flex gap-4">
+                <a href="dashboard.html" class="hover:underline">Dashboard</a>
+                <a href="estimation.html" class="hover:underline">Estimation</a>
+                <a href="historique.html" class="hover:underline">Historique</a>
+                <a href="pricing.html" class="hover:underline">Abonnement</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto p-6">
+        <div class="text-center mb-8">
+            <a href="dashboard.html" class="text-blue-600 hover:underline">← Retour</a>
+        </div>
+
+        <div class="bg-white p-8 rounded-xl shadow-lg fade-in">
+            <h2 class="text-3xl font-bold mb-6 text-center">📜 Historique des estimations</h2>
+            
+            <!-- Filters -->
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Trier par</label>
+                    <select id="sortBy" class="w-full border-2 border-gray-300 rounded-lg p-2" onchange="loadHistory()">
+                        <option value="date">Date (plus récent)</option>
+                        <option value="price">Prix (plus élevé)</option>
+                        <option value="name">Nom (A-Z)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Filtrer par état</label>
+                    <select id="filterCondition" class="w-full border-2 border-gray-300 rounded-lg p-2" onchange="loadHistory()">
+                        <option value="all">Tous les états</option>
+                        <option value="neuf">Neuf</option>
+                        <option value="excellent">Excellent</option>
+                        <option value="bon">Bon</option>
+                        <option value="use">Usé</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Rechercher</label>
+                    <input type="text" id="searchQuery" class="w-full border-2 border-gray-300 rounded-lg p-2" placeholder="Nom du produit..." oninput="loadHistory()">
+                </div>
+            </div>
+
+            <!-- History List -->
+            <div id="historyList">
+                <p class="text-gray-500 text-center py-8">Aucune estimation enregistrée.</p>
+            </div>
+
+            <!-- Clear History Button -->
+            <div class="text-center mt-6">
+                <button onclick="clearHistory()" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition">
+                    🗑️ Effacer l'historique
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-20">
+        <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
+            <div>
+                <h4 class="text-xl font-bold mb-4">🎯 PrixReventeAI</h4>
+                <p class="text-gray-400 text-sm">Estimez le prix optimal de vos articles seconde main en 30 secondes</p>
+            </div>
+            <div>
+                <h5 class="font-semibold mb-3">Produit</h5>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="estimation.html" class="hover:text-white">Estimation</a></li>
+                    <li><a href="pricing.html" class="hover:text-white">Tarifs</a></li>
+                    <li><a href="#" class="hover:text-white">API</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-semibold mb-3">Légal</h5>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white">CGU</a></li>
+                    <li><a href="#" class="hover:text-white">Confidentialité RGPD</a></li>
+                    <li><a href="#" class="hover:text-white">Mentions légales</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-semibold mb-3">Contact</h5>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="mailto:support@prixrevente.ai" class="hover:text-white">Support</a></li>
+                    <li><a href="#" class="hover:text-white">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 mt-8 pt-6 text-center text-sm text-gray-400">
+            <p>© 2025 PrixReventeAI. Tous droits réservés.</p>
+        </div>
+        <div class="max-w-6xl mx-auto px-6 mt-4 flex justify-center gap-4">
+            <select id="languageSelector" class="bg-gray-800 text-white px-3 py-2 rounded text-sm" onchange="changeLanguage(this.value)">
+                <option value="fr">🇫🇷 Français</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="de">🇩🇪 Deutsch</option>
+            </select>
+            <button onclick="toggleTheme()" class="bg-gray-800 px-3 py-2 rounded text-sm hover:bg-gray-700 transition">
+                <span id="themeIcon">🌙</span> <span id="themeText">Sombre</span>
+            </button>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    <script src="theme.js"></script>
+    <script src="i18n.js"></script>
+    <script>
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('estimations') || '[]');
+            const sortBy = document.getElementById('sortBy').value;
+            const filterCondition = document.getElementById('filterCondition').value;
+            const searchQuery = document.getElementById('searchQuery').value.toLowerCase();
+
+            let filtered = history;
+
+            // Filter by condition
+            if (filterCondition !== 'all') {
+                filtered = filtered.filter(item => item.condition === filterCondition);
+            }
+
+            // Filter by search query
+            if (searchQuery) {
+                filtered = filtered.filter(item => 
+                    item.productName.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            // Sort
+            if (sortBy === 'date') {
+                filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else if (sortBy === 'price') {
+                filtered.sort((a, b) => b.price - a.price);
+            } else if (sortBy === 'name') {
+                filtered.sort((a, b) => a.productName.localeCompare(b.productName));
+            }
+
+            const container = document.getElementById('historyList');
+            if (filtered.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">Aucune estimation trouvée.</p>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(h => `
+                <div class="border-b border-gray-200 py-4 hover:bg-gray-50 transition rounded-lg px-4 flex justify-between items-center">
+                    <div class="flex-1">
+                        <div class="font-semibold text-lg">${h.productName}</div>
+                        <div class="text-sm text-gray-600">
+                            <span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs mr-2">${getConditionLabel(h.condition)}</span>
+                            <span>${new Date(h.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-2xl font-bold text-green-600">${h.price}€</div>
+                        <div class="text-xs text-gray-500">${Math.round(h.price * 0.8)}€ - ${Math.round(h.price * 1.2)}€</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getConditionLabel(condition) {
+            const labels = {
+                'neuf': '✨ Neuf',
+                'excellent': '⭐ Excellent',
+                'bon': '👍 Bon',
+                'use': '📉 Usé'
+            };
+            return labels[condition] || condition;
+        }
+
+        function clearHistory() {
+            if (confirm('\u00cates-vous sûr de vouloir effacer tout l\'historique ?')) {
+                localStorage.removeItem('estimations');
+                loadHistory();
+            }
+        }
+
+        // Load history on page load
+        document.addEventListener('DOMContentLoaded', loadHistory);
+    </script>
+</body>
+</html>
