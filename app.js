@@ -78,3 +78,39 @@ document.addEventListener('DOMContentLoaded',()=>{
         `).join('');
     }
 });
+
+// Changement de langue
+function changeLanguage(lang) {
+    localStorage.setItem('language', lang);
+    console.log('Langue changée:', lang);
+    // TODO: Implémenter la traduction complète
+    alert(`Langue sélectionnée: ${lang}`);
+}
+
+// Toggle thème dark/light
+function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.classList.contains('dark');
+    
+    if (isDark) {
+        html.classList.remove('dark');
+        document.getElementById('themeIcon').textContent = '🌙';
+        document.getElementById('themeText').textContent = 'Sombre';
+        localStorage.setItem('theme', 'light');
+    } else {
+        html.classList.add('dark');
+        document.getElementById('themeIcon').textContent = '☀️';
+        document.getElementById('themeText').textContent = 'Clair';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Charger le thème au démarrage
+if (localStorage.getItem('theme') === 'dark') {
+    document.documentElement.classList.add('dark');
+    if (document.getElementById('themeIcon')) {
+        document.getElementById('themeIcon').textContent = '☀️';
+        document.getElementById('themeText').textContent = 'Clair';
+    }
+}
+});
