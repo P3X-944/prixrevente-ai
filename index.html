@@ -119,8 +119,61 @@
                 <div class="bg-gradient-to-br from-blue-600 to-orange-500 text-white rounded-lg shadow-lg p-8 transform scale-105"><h3 class="text-2xl font-bold mb-4">PRO</h3><p class="text-4xl font-bold mb-4">19€<span class="text-sm">/mois</span></p><ul class="space-y-2 mb-6"><li>✅ 100 estimations/mois</li><li>✅ Scraping avancé</li><li>✅ Analyse IA photos</li><li>✅ Historique complet</li></ul><button class="w-full bg-white text-blue-600 px-6 py-3 rounded-lg font-bold">Passer PRO
             </div>
         </div>
+            
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white mt-20">
+        <div class="max-w-6xl mx-auto px-6 py-12">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="text-xl font-bold mb-4">🎯 PrixReventeAI</h4>
+                    <p class="text-gray-400 text-sm">Estimez le prix optimal de vos articles seconde main en 30 secondes</p>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-3">Produit</h5>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="javascript:void(0)" onclick="showEstimate()" class="hover:text-white">Estimation</a></li>
+                        <li><a href="javascript:void(0)" onclick="showPricing()" class="hover:text-white">Tarifs</a></li>
+                        <li><a href="#" class="hover:text-white">API</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-3">Légal</h5>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white">CGU</a></li>
+                        <li><a href="#" class="hover:text-white">Confidentialité RGPD</a></li>
+                        <li><a href="#" class="hover:text-white">Mentions légales</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-3">Contact</h5>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="mailto:support@prixrevente.ai" class="hover:text-white">Support</a></li>
+                        <li><a href="#" class="hover:text-white">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-wrap justify-between items-center gap-4">
+                <p class="text-sm text-gray-400">© 2025 PrixReventeAI. Tous droits réservés.</p>
+                
+                <div class="flex items-center gap-4">
+                    <select id="languageSelector" class="bg-gray-800 text-white px-3 py-2 rounded text-sm" onchange="changeLanguage(this.value)">
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="en">🇬🇧 English</option>
+                        <option value="es">🇪🇸 Español</option>
+                        <option value="de">🇩🇪 Deutsch</option>
+                    </select>
+                    
+                    <button onclick="toggleTheme()" id="themeToggle" class="bg-gray-800 px-3 py-2 rounded hover:bg-gray-700">
+                        <span id="themeIcon">🌙</span> <span id="themeText">Sombre</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </footer>
     </main>
 
+    <script src="auth.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
