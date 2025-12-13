@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement - PrixReventeAI</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-icon">🔄</span>
+                <h1>PrixReventeAI</h1>
+            </div>
+            <div class="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="estimation.html">Estimation</a>
+                <a href="historique.html">Historique</a>
+                <a href="pricing.html" class="active">Abonnement</a>
+            </div>
+            <div class="nav-actions">
+                <button id="themeToggle" class="icon-button">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <select id="languageSelect" class="language-select">
+                    <option value="fr">🇫🇷 FR</option>
+                    <option value="en">🇬🇧 EN</option>
+                    <option value="es">🇪🇸 ES</option>
+                    <option value="de">🇩🇪 DE</option>
+                </select>
+                <button class="btn-secondary" onclick="logout()">Déconnexion</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Checkout Section -->
+    <div class="container" style="max-width: 600px; margin: 100px auto; padding: 20px;">
+        <div class="card">
+            <h2 style="text-align: center; margin-bottom: 20px;">Finaliser votre abonnement</h2>
+            
+            <div id="plan-details" style="background: var(--bg-secondary); padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+                <h3 id="plan-name" style="margin: 0 0 10px 0;">Loading...</h3>
+                <p id="plan-price" style="font-size: 32px; font-weight: bold; margin: 10px 0;">Loading...</p>
+                <ul id="plan-features" style="list-style: none; padding: 0;">
+                    <!-- Features will be loaded dynamically -->
+                </ul>
+            </div>
+
+            <button id="checkout-button" class="btn-primary" style="width: 100%; padding: 15px; font-size: 18px;">
+                Procéder au paiement
+            </button>
+
+            <p style="text-align: center; margin-top: 20px; color: var(--text-secondary); font-size: 14px;">
+                Paiement sécurisé par Stripe. Vous serez redirigé vers une page de paiement sécurisée.
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script src="i18n.js"></script>
+    <script>
+        // Get plan from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const plan = urlParams.get('plan') || 'pro';
+
+        // Plan configurations
+        const plans = {
+            pro: {
+                name: 'PRO',
+                price: '€19/mois',
+                features: [
+                    '✓ 100 estimations par mois',
+                    '✓ Historique complet',
+                    '✓ Analyses détaillées',
+                    '✓ Support prioritaire'
+                ]
+            },
+            premium: {
+                name: 'PREMIUM',
+                price: '€49/mois',
+                features: [
+                    '✓ Estimations illimitées',
+                    '✓ Historique illimité',
+                    '✓ Analyses avancées',
+                    '✓ Support prioritaire',
+                    '✓ Accès anticipé aux nouvelles fonctionnalités'
+                ]
+            }
+        };
+
+        // Display plan details
+        const selectedPlan = plans[plan];
+        if (selectedPlan) {
+            document.getElementById('plan-name').textContent = `Plan ${selectedPlan.name}`;
+            document.getElementById('plan-price').textContent = selectedPlan.price;
+            
+            const featuresList = document.getElementById('plan-features');
+            featuresList.innerHTML = selectedPlan.features
+                .map(feature => `<li style="padding: 8px 0;">${feature}</li>`)
+                .join('');
+        }
+
+        // Initialize Stripe
+        const stripe = Stripe('pk_test_51SdsIQGWOnOB6nmsRLJgECvUF0hKcKjYXkX6lQTNJCKs0zvMdNCLHwSYN7lhfDZBTdBvHpYa2KNVG9xUOqfJE14J00GVW8mf63');
+
+        // Handle checkout button click
+        document.getElementById('checkout-button').addEventListener('click', async () => {
+            const button = document.getElementById('checkout-button');
+            button.disabled = true;
+            button.textContent = 'Chargement...';
+
+            try {
+                const response = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ plan })
+                });
+
+                const session = await response.json();
+
+                if (session.error) {
+                    throw new Error(session.error);
+                }
+
+                // Redirect to Stripe Checkout
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.id
+                });
+
+                if (result.error) {
+                    throw new Error(result.error.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Une erreur est survenue. Veuillez réessayer.');
+                button.disabled = false;
+                button.textContent = 'Procéder au paiement';
+            }
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
