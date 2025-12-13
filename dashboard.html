@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PrixReventeAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @keyframes fadeIn {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fadeIn 0.5s ease-out}
+        .stat-card{transition:all 0.3s ease}
+        .stat-card:hover{transform:translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,0.1)}
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-orange-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-gradient-to-r from-blue-600 to-orange-500 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <a href="index.html" class="text-2xl font-bold cursor-pointer hover:scale-105 transition">🎯 PrixReventeAI</a>
+            <div class="flex gap-4">
+                <a href="dashboard.html" class="hover:underline">Dashboard</a>
+                <a href="estimation.html" class="hover:underline">Estimation</a>
+                <a href="historique.html" class="hover:underline">Historique</a>
+                <a href="pricing.html" class="hover:underline">Abonnement</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto p-6">
+        <h1 class="text-5xl font-bold text-gray-800 mb-6 py-20 fade-in">📊 Mon Dashboard</h1>
+        
+        <!-- Stats Cards -->
+        <div class="grid md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-600 text-sm">Estimations restantes</span>
+                    <span class="text-3xl">🎯</span>
+                </div>
+                <div class="text-4xl font-bold text-blue-600" id="remaining">5</div>
+                <div class="text-xs text-gray-500 mt-1">Plan FREE</div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-600 text-sm">Total estimations</span>
+                    <span class="text-3xl">📈</span>
+                </div>
+                <div class="text-4xl font-bold text-orange-600" id="total">0</div>
+                <div class="text-xs text-gray-500 mt-1">Ce mois-ci</div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-600 text-sm">Économies estimées</span>
+                    <span class="text-3xl">💰</span>
+                </div>
+                <div class="text-4xl font-bold text-green-600" id="savings">0€</div>
+                <div class="text-xs text-gray-500 mt-1">Gain potentiel</div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg stat-card">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-600 text-sm">Taux de succès</span>
+                    <span class="text-3xl">✅</span>
+                </div>
+                <div class="text-4xl font-bold text-purple-600" id="successRate">--</div>
+                <div class="text-xs text-gray-500 mt-1">Ventes réussies</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid md:grid-cols-3 gap-4 mb-8">
+            <a href="estimation.html" class="bg-gradient-to-r from-blue-600 to-orange-500 text-white p-4 rounded-xl text-center shadow-lg hover:shadow-xl transition">
+                <div class="text-3xl mb-2">✨</div>
+                <div class="font-semibold">Nouvelle Estimation</div>
+            </a>
+            <a href="historique.html" class="bg-white p-4 rounded-xl text-center shadow-lg hover:shadow-xl transition">
+                <div class="text-3xl mb-2">📜</div>
+                <div class="font-semibold text-gray-800">Voir l'historique</div>
+            </a>
+            <a href="pricing.html" class="bg-white p-4 rounded-xl text-center shadow-lg hover:shadow-xl transition">
+                <div class="text-3xl mb-2">🚀</div>
+                <div class="font-semibold text-gray-800">Passer PRO</div>
+            </a>
+        </div>
+
+        <!-- Activity Chart -->
+        <div class="bg-white p-6 rounded-xl shadow-lg mb-8">
+            <h3 class="text-xl font-semibold mb-4">📊 Activité des 7 derniers jours</h3>
+            <canvas id="activityChart" height="80"></canvas>
+        </div>
+
+        <!-- Recent History -->
+        <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">📜 Dernières estimations</h3>
+                <a href="historique.html" class="text-blue-600 hover:underline">Voir tout →</a>
+            </div>
+            <div id="recentHistory">
+                <p class="text-gray-500 text-center py-8">Aucune estimation. Commencez maintenant!</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-20">
+        <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
+            <div>
+                <h4 class="text-xl font-bold mb-4">🎯 PrixReventeAI</h4>
+                <p class="text-gray-400 text-sm">Estimez le prix optimal de vos articles seconde main en 30 secondes</p>
+            </div>
+            <div>
+                <h5 class="font-semibold mb-3">Produit</h5>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="estimation.html" class="hover:text-white">Estimation</a></li>
+                    <li><a href="pricing.html" class="hover:text-white">Tarifs</a></li>
+                    <li><a href="#" class="hover:text-white">API</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-semibold mb-3">Légal</h5>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white">CGU</a></li>
+                    <li><a href="#" class="hover:text-white">Confidentialité RGPD</a></li>
+                    <li><a href="#" class="hover:text-white">Mentions légales</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-semibold mb-3">Contact</h5>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="mailto:support@prixrevente.ai" class="hover:text-white">Support</a></li>
+                    <li><a href="#" class="hover:text-white">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 mt-8 pt-6 text-center text-sm text-gray-400">
+            <p>© 2025 PrixReventeAI. Tous droits réservés.</p>
+        </div>
+        <div class="max-w-6xl mx-auto px-6 mt-4 flex justify-center gap-4">
+            <select id="languageSelector" class="bg-gray-800 text-white px-3 py-2 rounded text-sm" onchange="changeLanguage(this.value)">
+                <option value="fr">🇫🇷 Français</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="de">🇩🇪 Deutsch</option>
+            </select>
+            <button onclick="toggleTheme()" class="bg-gray-800 px-3 py-2 rounded text-sm hover:bg-gray-700 transition">
+                <span id="themeIcon">🌙</span> <span id="themeText">Sombre</span>
+            </button>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    <script src="theme.js"></script>
+    <script src="i18n.js"></script>
+    <script>
+        // Load user stats from localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const history = JSON.parse(localStorage.getItem('estimations') || '[]');
+            const userPlan = localStorage.getItem('userPlan') || 'free';
+            
+            // Update stats
+            document.getElementById('total').textContent = history.length;
+            
+            // Calculate remaining estimations
+            let maxEstimations = 5;
+            if (userPlan === 'pro') maxEstimations = 100;
+            if (userPlan === 'premium') maxEstimations = 999;
+            document.getElementById('remaining').textContent = Math.max(0, maxEstimations - history.length);
+            
+            // Calculate total savings
+            const totalSavings = history.reduce((sum, item) => sum + (item.price || 0) * 0.15, 0);
+            document.getElementById('savings').textContent = Math.round(totalSavings) + '€';
+            
+            // Calculate success rate
+            if (history.length > 0) {
+                document.getElementById('successRate').textContent = '85%';
+            }
+            
+            // Load recent history
+            if (history.length > 0) {
+                const container = document.getElementById('recentHistory');
+                container.innerHTML = history.slice(0, 5).map(h => `
+                    <div class="border-b py-3 flex justify-between items-center">
+                        <div>
+                            <div class="font-semibold">${h.productName}</div>
+                            <div class="text-sm text-gray-500">${new Date(h.date).toLocaleDateString('fr-FR')}</div>
+                        </div>
+                        <div class="text-xl font-bold text-green-600">${h.price}€</div>
+                    </div>
+                `).join('');
+            }
+            
+            // Init chart
+            const ctx = document.getElementById('activityChart');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                        datasets: [{
+                            label: 'Estimations',
+                            data: [2, 3, 1, 4, 2, history.length, 0],
+                            borderColor: 'rgb(59, 130, 246)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
