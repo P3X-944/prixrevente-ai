@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estimation - PrixReventeAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes confetti {from{transform:translateY(-100vh) rotate(0deg)}to{transform:translateY(100vh) rotate(720deg)}}
+        .confetti{position:fixed;width:10px;height:10px;animation:confetti 3s ease-in-out;z-index:9999}
+        @keyframes fadeIn {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fadeIn 0.5s ease-out}
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-orange-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-gradient-to-r from-blue-600 to-orange-500 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <a href="index.html" class="text-2xl font-bold cursor-pointer hover:scale-105 transition">🎯 PrixReventeAI</a>
+            <div class="flex gap-4">
+                <a href="dashboard.html" class="hover:underline">Dashboard</a>
+                <a href="estimation.html" class="hover:underline">Estimation</a>
+                <a href="historique.html" class="hover:underline">Historique</a>
+                <a href="pricing.html" class="hover:underline">Abonnement</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto p-6">
+        <div class="text-center mb-8">
+            <a href="dashboard.html" class="text-blue-600 hover:underline">← Retour</a>
+        </div>
+
+        <div id="estimateForm" class="bg-white p-8 rounded-xl shadow-lg max-w-2xl mx-auto fade-in">
+            <h2 class="text-3xl font-bold mb-6 text-center">✨ Nouvelle Estimation</h2>
+            
+            <form onsubmit="calculatePrice(event)">
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2 font-semibold">📸 Photo du produit</label>
+                    <input type="file" accept="image/*" class="w-full border-2 border-gray-300 rounded-lg p-2">
+                    <p class="text-sm text-gray-500 mt-1">L'IA analysera automatiquement la photo</p>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2 font-semibold">🏷️ Nom du produit *</label>
+                    <input type="text" id="productName" required class="w-full border-2 border-gray-300 rounded-lg p-2" placeholder="Ex: Nike Air Max 90">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2 font-semibold">📦 État *</label>
+                    <select id="condition" class="w-full border-2 border-gray-300 rounded-lg p-2">
+                        <option value="neuf">✨ Neuf avec étiquette</option>
+                        <option value="excellent">⭐ Excellent état</option>
+                        <option value="bon" selected>👍 Bon état</option>
+                        <option value="use">📉 Usé</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-orange-500 text-white py-3 rounded-lg font-semibold hover:shadow-xl transition">
+                    🤖 Estimer avec l'IA
+                </button>
+            </form>
+        </div>
+
+        <div id="result" class="hidden bg-white p-8 rounded-xl shadow-lg max-w-2xl mx-auto fade-in mt-8">
+            <h2 class="text-3xl font-bold mb-6 text-center">Résultat de l'estimation</h2>
+            
+            <div class="text-center mb-6">
+                <div class="text-gray-600 mb-2">Prix recommandé</div>
+                <div class="text-6xl font-bold text-green-600" id="recPrice">45€</div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div class="text-center p-4 bg-gray-50 rounded-lg">
+                    <div class="text-sm text-gray-600">Fourchette:</div>
+                    <div class="font-semibold" id="range">36€ - 54€</div>
+                </div>
+                <div class="text-center p-4 bg-gray-50 rounded-lg">
+                    <div class="text-sm text-gray-600">Temps vente:</div>
+                    <div class="font-semibold">3-7 jours</div>
+                </div>
+                <div class="text-center p-4 bg-gray-50 rounded-lg">
+                    <div class="text-sm text-gray-600">Plateforme:</div>
+                    <div class="font-semibold">Vinted</div>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="document.getElementById('result').classList.add('hidden'); document.getElementById('estimateForm').classList.remove('hidden');" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-300 transition">
+                    Nouvelle estimation
+                </button>
+                <a href="historique.html" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold text-center hover:bg-blue-700 transition">
+                    Voir l'historique
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-20">
+        <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
+            <div>
+                <h4 class="text-xl font-bold mb-4">🎯 PrixReventeAI</h4>
+                <p class="text-gray-400 text-sm">Estimez le prix optimal de vos articles seconde main en 30 secondes</p>
+            </div>
+            <div>
+                <h5 class="font-semibold mb-3">Produit</h5>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="estimation.html" class="hover:text-white">Estimation</a></li>
+                    <li><a href="pricing.html" class="hover:text-white">Tarifs</a></li>
+                    <li><a href="#" class="hover:text-white">API</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-semibold mb-3">Légal</h5>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white">CGU</a></li>
+                    <li><a href="#" class="hover:text-white">Confidentialité RGPD</a></li>
+                    <li><a href="#" class="hover:text-white">Mentions légales</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-semibold mb-3">Contact</h5>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="mailto:support@prixrevente.ai" class="hover:text-white">Support</a></li>
+                    <li><a href="#" class="hover:text-white">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 mt-8 pt-6 text-center text-sm text-gray-400">
+            <p>© 2025 PrixReventeAI. Tous droits réservés.</p>
+        </div>
+        <div class="max-w-6xl mx-auto px-6 mt-4 flex justify-center gap-4">
+            <select id="languageSelector" class="bg-gray-800 text-white px-3 py-2 rounded text-sm" onchange="changeLanguage(this.value)">
+                <option value="fr">🇫🇷 Français</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="de">🇩🇪 Deutsch</option>
+            </select>
+            <button onclick="toggleTheme()" class="bg-gray-800 px-3 py-2 rounded text-sm hover:bg-gray-700 transition">
+                <span id="themeIcon">🌙</span> <span id="themeText">Sombre</span>
+            </button>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    <script src="theme.js"></script>
+    <script src="i18n.js"></script>
+    <script>
+        function calculatePrice(e) {
+            e.preventDefault();
+            const productName = document.getElementById('productName').value;
+            const condition = document.getElementById('condition').value;
+
+            // Simulation analyse IA Perplexity
+            let basePrice = Math.floor(Math.random() * 100) + 30;
+            if (condition === 'neuf') basePrice = Math.round(basePrice * 1.15);
+            else if (condition === 'excellent') basePrice = Math.round(basePrice * 1.05);
+            else if (condition === 'use') basePrice = Math.round(basePrice * 0.75);
+
+            // Mise à jour UI
+            document.getElementById('recPrice').textContent = basePrice + '€';
+            document.getElementById('range').textContent = Math.round(basePrice * 0.8) + '€ - ' + Math.round(basePrice * 1.2) + '€';
+
+            // Confettis
+            for (let i = 0; i < 50; i++) {
+                const conf = document.createElement('div');
+                conf.className = 'confetti';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.backgroundColor = ['#3B82F6', '#F97316', '#10B981'][Math.floor(Math.random() * 3)];
+                document.body.appendChild(conf);
+                setTimeout(() => conf.remove(), 3000);
+            }
+
+            // Sauvegarder dans historique localStorage
+            const history = JSON.parse(localStorage.getItem('estimations') || '[]');
+            history.unshift({ productName, condition, price: basePrice, date: new Date().toISOString() });
+            localStorage.setItem('estimations', JSON.stringify(history.slice(0, 10)));
+
+            // Afficher résultat
+            document.getElementById('estimateForm').classList.add('hidden');
+            document.getElementById('result').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
