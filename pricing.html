@@ -96,5 +96,24 @@ t<!DOCTYPE html>
     <script src="app.js"></script>
     <script src="theme.js"></script>
     <script src="i18n.js"></script>
+    <script>
+// Fix pricing buttons navigation
+document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(btn => {
+        const text = btn.textContent;
+        // Fix PRO button
+        if (text.includes('PRO') && !text.includes('PREMIUM')) {
+            btn.textContent = 'Passer PRO';
+            btn.onclick = function() { window.location.href = 'checkout.html?plan=pro'; };
+        }
+        // Fix PREMIUM button  
+        if (text.includes('PREMIUM')) {
+            btn.textContent = 'Passer PREMIUM';
+            btn.onclick = function() { window.location.href = 'checkout.html?plan=premium'; };
+        }
+    });
+});
+</script>
 </body>
 </html>
