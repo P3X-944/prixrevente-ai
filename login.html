@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - PrixReventeAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-orange-50 min-h-screen">
+    <div class="min-h-screen flex items-center justify-center p-6">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold mb-2">🎯 PrixReventeAI</h1>
+                <p class="text-gray-600">Connectez-vous pour commencer</p>
+            </div>
+
+            <!-- Google Sign-In Button -->
+            <div id="g_id_onload"
+                 data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+                 data-callback="handleGoogleSignIn"
+                 data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin" 
+                 data-type="standard"
+                 data-size="large"
+                 data-theme="outline"
+                 data-text="signin_with"
+                 data-shape="rectangular"
+                 data-logo_alignment="center"
+                 data-width="100%">
+            </div>
+
+            <div class="my-6 flex items-center">
+                <div class="flex-1 border-t border-gray-300"></div>
+                <span class="px-4 text-gray-500 text-sm">OU</span>
+                <div class="flex-1 border-t border-gray-300"></div>
+            </div>
+
+            <!-- Formulaire email/password (optionnel) -->
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold mb-2">Email</label>
+                    <input type="email" id="email" required 
+                           class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-blue-500 focus:outline-none"
+                           placeholder="votre@email.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-2">Mot de passe</label>
+                    <input type="password" id="password" required 
+                           class="w-full border-2 border-gray-300 rounded-lg p-3 focus:border-blue-500 focus:outline-none"
+                           placeholder="••••••••">
+                </div>
+                <button type="submit" 
+                        class="w-full bg-gradient-to-r from-blue-600 to-orange-500 text-white px-6 py-3 rounded-lg font-bold hover:shadow-xl transition">
+                    Se connecter
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600">
+                    Pas encore de compte? 
+                    <a href="#" onclick="showSignup()" class="text-blue-600 font-bold hover:underline">Créer un compte</a>
+                </p>
+            </div>
+
+            <div class="mt-8 text-center text-xs text-gray-500">
+                <p>En vous connectant, vous acceptez nos</p>
+                <p>
+                    <a href="#" class="text-blue-600 hover:underline">CGU</a> et 
+                    <a href="#" class="text-blue-600 hover:underline">Politique RGPD</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal RGPD pour nouveaux utilisateurs -->
+    <div id="rgpdModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg p-8 max-w-2xl max-h-screen overflow-y-auto">
+            <h2 class="text-2xl font-bold mb-4">🔒 Protection de vos données</h2>
+            <p class="mb-4">Bienvenue <strong id="userName"></strong> !</p>
+            
+            <div class="bg-blue-50 p-4 rounded mb-4">
+                <h3 class="font-bold mb-2">📋 Données collectées (RGPD)</h3>
+                <ul class="text-sm space-y-1">
+                    <li>✓ Nom et email (authentification)</li>
+                    <li>✓ Historique d'estimations (stocké localement)</li>
+                    <li>✓ Utilisation du quota (gestion abonnement)</li>
+                </ul>
+            </div>
+
+            <div class="bg-green-50 p-4 rounded mb-4">
+                <h3 class="font-bold mb-2">🛡️ Vos droits RGPD</h3>
+                <ul class="text-sm space-y-1">
+                    <li>✓ Accès à vos données</li>
+                    <li>✓ Rectification et suppression</li>
+                    <li>✓ Portabilité des données</li>
+                    <li>✓ Opposition au traitement</li>
+                </ul>
+            </div>
+
+            <div class="mb-4">
+                <label class="flex items-start gap-2 cursor-pointer">
+                    <input type="checkbox" id="acceptTerms" class="mt-1">
+                    <span class="text-sm">J'accepte les <a href="#" class="text-blue-600 underline">CGU</a></span>
+                </label>
+            </div>
+
+            <div class="mb-6">
+                <label class="flex items-start gap-2 cursor-pointer">
+                    <input type="checkbox" id="acceptRGPD" class="mt-1">
+                    <span class="text-sm">J'accepte la <a href="#" class="text-blue-600 underline">Politique RGPD</a> et le traitement de mes données</span>
+                </label>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="cancelSignup()" class="flex-1 bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Annuler</button>
+                <button onclick="confirmSignup()" id="confirmBtn" disabled 
+                        class="flex-1 bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-blue-700">Créer mon compte</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // Gérer le formulaire de connexion classique
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // TODO: Implémenter l'authentification email/password
+            alert('Authentification email/password à implémenter');
+        });
+
+        // Afficher le formulaire d'inscription
+        function showSignup() {
+            alert('Page d\'inscription à implémenter ou utiliser Google Sign-In');
+        }
+    </script>
+</body>
+</html>
