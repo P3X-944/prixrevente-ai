@@ -6,10 +6,10 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Price IDs des abonnements
-const PRICE_IDS = {
-  pro: 'price_1SdsoKGWOnOB6nms6DWX6yJZ',
-  premium: 'price_1SdsoKGWOnOB6nms6DWX6yJZ' // Temporaire - à remplacer
-};
+const PRICE_IDS = { 
+    pro: process.env.STRIPE_PRICE_PRO,
+    premium: process.env.STRIPE_PRICE_PREMIUM
+      };
 
 export default async function handler(req, res) {
   // Configuration CORS
